@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+import 'features/cmbhome/screens/discover/discover.dart';
 import 'features/cmbhome/screens/fees/fees.dart';
 import 'features/cmbhome/screens/home/home.dart';
-import 'features/cmbhome/screens/payments/payments.dart';
+import 'features/cmbhome/screens/myschedules/myschedules.dart';
 import 'features/cmbhome/screens/profile/profile.dart';
 import 'utils/constants/colors.dart';
 import 'utils/helpers/helper.dart';
@@ -33,7 +34,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
           indicatorColor: darkMode ? TColors.white.withOpacity(0.1):TColors.black.withOpacity(0.1),
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Iconsax.message), label: 'Community'),
+            NavigationDestination(icon: Icon(Iconsax.search_favorite), label: 'Discover'),
             NavigationDestination(icon: Icon(Iconsax.calendar), label: 'MySchedules'),
             NavigationDestination(icon: Icon(Iconsax.user), label: 'Profile'),
           ]),
@@ -47,7 +48,7 @@ class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
   final screens = [
                     const HomeScreen(),
-                    const FeesScreen(),
-                    const PaymentsScreen(),
+                    const DiscoverScreen(),
+                    const MySchedulesScreen(),
                     const ProfileScreen()];
 }

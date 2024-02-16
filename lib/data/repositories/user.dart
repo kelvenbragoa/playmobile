@@ -5,6 +5,7 @@ class UserData {
   String mobile;
   String email;
   String birthDate;
+  var balance;
   // String code;
   // var today;
   // var yesterday;
@@ -19,6 +20,7 @@ class UserData {
     required this.mobile,
     required this.email,
     required this.birthDate,
+    required this.balance
     // required this.code,
     // required this.today,
     // required this.year,
@@ -36,6 +38,7 @@ class UserData {
       mobile: json['user']['mobile'],
       email: json['user']['email'],
       birthDate: json['user']['birth_date'],
+      balance: json['user']['balance'],
       // code: json['user']['code'],
       // today: json['dashboard']['today'],
       // yesterday: json['dashboard']['yesterday'],

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:padelmobile/data/repositories/confirmationSchedule.dart';
 import 'package:padelmobile/data/services/user_services.dart';
 
 import '../../utils/constants/api_constants.dart';
@@ -9,7 +10,7 @@ import '../repositories/myschedule.dart';
 import '../repositories/payment_model.dart';
 
 
-Future<ApiResponse> getAllPayments() async {
+Future<ApiResponse> getAllMySchedule() async {
 
 //funional
   ApiResponse apiResponse = ApiResponse();
@@ -30,8 +31,7 @@ Future<ApiResponse> getAllPayments() async {
 
     
 
-    
-  print(response.body);
+ 
      
     
 
@@ -41,7 +41,7 @@ Future<ApiResponse> getAllPayments() async {
         for(int i=0;i<values.length;i++){
            
           if(values[i]!=null){
-            print(values[i]);
+       
             Map<String,dynamic> map=values[i];
             paymentList.add(MyScheduleModel.fromJson(map));
           }}
@@ -95,12 +95,12 @@ Future<ApiResponse> getAllPayments() async {
 }
 
 
-Future<ApiResponse> getPayment(id) async {
+Future<ApiResponse> getMySchedule(id) async {
 
 //funional
   ApiResponse apiResponse = ApiResponse();
   var data;
-  List<PaymentModel> paymentList =[];
+  List<ConfirmationSchedule> myScheduleList =[];
 
 
 
@@ -109,12 +109,13 @@ Future<ApiResponse> getPayment(id) async {
     
   
     final response = await http.get(
-      Uri.parse('${APIConstants.paymentURL}/$id'),
+      Uri.parse('${APIConstants.playerURL}/$id'),
       headers: {'Accept':'application/json',
      }
     );
 
-    var values = jsonDecode(response.body)['payment'];
+    var values = jsonDecode(response.body)['player'];
+
 
 
      
@@ -130,7 +131,7 @@ Future<ApiResponse> getPayment(id) async {
            
             Map<String,dynamic> map=values[i];
             
-            paymentList.add(PaymentModel.fromJson(map));
+            myScheduleList.add(ConfirmationSchedule.fromJson(map));
 
            
           }}
@@ -146,7 +147,7 @@ Future<ApiResponse> getPayment(id) async {
       // apiResponse.data = Category.fromJson(jsonDecode(response.body));
         // apiResponse.data = jsonDecode(response.body)['categories'].map((p) => Category.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
-        apiResponse.data = paymentList;
+        apiResponse.data = myScheduleList;
         apiResponse.data as List<dynamic>;
         
        
@@ -187,14 +188,15 @@ Future<ApiResponse> getPayment(id) async {
 
 Future<ApiResponse> createPayment(int userid, int schedule_id, String title, String obs) async {
   
-
+ 
+List<ConfirmationSchedule> confirmationList =[];
   
 
 ApiResponse apiResponse = ApiResponse();
   try {
     
     final response = await http.post(
-      Uri.parse(APIConstants.playerCreateURL),
+      Uri.parse(APIConstants.playerURL),
       headers: {
       'Accept': 'application/json',
       
@@ -204,17 +206,33 @@ ApiResponse apiResponse = ApiResponse();
       'obs': obs,
     } );
 
+    var values = jsonDecode(response.body)['player'];
 
 
-  print(response.body);
-    
 
     
-    
+
+    if(values.length>0){
+
+      
+        for(int i=0;i<values.length;i++){
+          
+          if(values[i]!=null){
+           
+            Map<String,dynamic> map=values[i];
+            
+            confirmationList.add(ConfirmationSchedule.fromJson(map));
+
+           
+          }}
+    }
 
     switch(response.statusCode){
       case 200:
-        apiResponse.data = jsonDecode(response.body)['message'];
+        // apiResponse.data = jsonDecode(response.body)['message'];
+        apiResponse.data = confirmationList;
+        apiResponse.message = jsonDecode(response.body)['message'];
+        apiResponse.data as List<dynamic>;
         break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];

@@ -21,14 +21,16 @@ class TText{
 
 static const String loginTitle = "Welcome back";
 static const String loginSubTitle = "Schedule to play at any time with your app.";
+ static const String loginSubTitle1 = "Join the largest community of padel players";
 
-static const String signUpTitle = "Crie a sua conta";
+static const String signUpTitle = "Create account";
+static const String signInTitle = "Login With Your Account";
 static const String signUpSubTitle = "Inicie o seu aplicativo de exames de condução";
-static const String phoneNumber = "Telefone";
-static const String iAgreeTo = "Eu concordo com os";
-static const String termsOfUse = "Termos de Uso";
-static const String and = "e";
-static const String privacyPolicy = "Politicas de Privacidade";
+static const String phoneNumber = "Mobile";
+static const String iAgreeTo = "I agree with";
+static const String termsOfUse = "Terms of use";
+static const String and = "and";
+static const String privacyPolicy = "Privacy Policy";
 
 
 //Forget Page
@@ -55,6 +57,10 @@ static const String addInfo = "Additional Information";
 
 static const String createAccount = "Create Account";
 static const String pleaseWait = "Please wait...";
+
+static const String outOfBalance = 'Insufficient Funds';
+
+static const String topUpAccount ='Please top up your account before booking';
 
 
   //HOME
@@ -156,7 +162,7 @@ static const String pleaseWait = "Please wait...";
   //THREE DOT BUTTONS
 
   static const String helpButton = "Ajuda";
-  static const String logOutButton = "Sair";
+  static const String logOutButton = "LogOut";
   static const String profile = "Perfil";
 
 
@@ -169,6 +175,8 @@ static const String pleaseWait = "Please wait...";
 
   static const String eraseAccountInfo = "Ao eliminar a sua conta, serão apagados todos dados e informações relacionados a sua conta e não será possível entrar novamente com sua conta";
   static const String eraseAccount = "Eliminar conta";
+
+  static const String amount = "Amount";
 
 
 

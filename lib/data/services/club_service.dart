@@ -1,41 +1,46 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:padelmobile/data/repositories/court_model.dart';
 
 import '../../utils/constants/api_constants.dart';
 import '../repositories/api_response.dart';
+import '../repositories/club_model.dart';
 import '../repositories/licence_model.dart';
 
 
-Future<ApiResponse> getAllLicences() async {
+Future<ApiResponse> getAllClub() async {
 
 //funional
   ApiResponse apiResponse = ApiResponse();
   var data;
-  List<LicenceModel> licenceList =[];
+  List<ClubModel> clubList =[];
 
 
   try{
     
     
     final response = await http.get(
-      Uri.parse(APIConstants.licenceURL),
+      Uri.parse(APIConstants.clubURL),
       headers: {'Accept':'application/json',
      }
     );
 
-    var values = jsonDecode(response.body)['licences'];
 
+
+    var values = jsonDecode(response.body)['clubs'];
 
    
-     
-    
+
+   
+   
 
 
     if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
             Map<String,dynamic> map=values[i];
-            licenceList.add(LicenceModel.fromJson(map));
+            clubList.add(ClubModel.fromJson(map));
+         
           }}
     }
     
@@ -49,8 +54,9 @@ Future<ApiResponse> getAllLicences() async {
       // apiResponse.data = Category.fromJson(jsonDecode(response.body));
         // apiResponse.data = jsonDecode(response.body)['categories'].map((p) => Category.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
-        apiResponse.data = licenceList;
+        apiResponse.data = clubList;
         apiResponse.data as List<dynamic>;
+   
         
        
 
@@ -84,12 +90,12 @@ Future<ApiResponse> getAllLicences() async {
 }
 
 
-Future<ApiResponse> getLicence(id) async {
+Future<ApiResponse> getClub(id) async {
 
 //funional
   ApiResponse apiResponse = ApiResponse();
   var data;
-  List<LicenceModel> licenceList =[];
+  List<CourtModel> courtList =[];
 
 
 
@@ -98,27 +104,30 @@ Future<ApiResponse> getLicence(id) async {
     
   
     final response = await http.get(
-      Uri.parse('${APIConstants.licenceURL}/$id'),
+      Uri.parse('${APIConstants.clubURL}/$id'),
       headers: {'Accept':'application/json',
      }
     );
 
-    var values = jsonDecode(response.body)['licence'];
+    var values = jsonDecode(response.body)['courts'];
 
 
-     
-    
+
+
+
+
 
 
     if(values.length>0){
+ 
       
         for(int i=0;i<values.length;i++){
-          
+      
           if(values[i]!=null){
            
             Map<String,dynamic> map=values[i];
             
-            licenceList.add(LicenceModel.fromJson(map));
+            courtList.add(CourtModel.fromJson(map));
           }}
     }
     
@@ -132,8 +141,9 @@ Future<ApiResponse> getLicence(id) async {
       // apiResponse.data = Category.fromJson(jsonDecode(response.body));
         // apiResponse.data = jsonDecode(response.body)['categories'].map((p) => Category.fromJson(p)).toList();
         // we get list of posts, so we need to map each item to post model
-        apiResponse.data = licenceList;
+        apiResponse.data = courtList;
         apiResponse.data as List<dynamic>;
+   
         
        
 
@@ -154,10 +164,11 @@ Future<ApiResponse> getLicence(id) async {
 
       default:
       apiResponse.error = APIConstants.serverError;
+      
     }
   }catch (e){
     
-
+    
     apiResponse.error = APIConstants.serverError;
 
   }

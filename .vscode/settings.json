@@ -1,3 +1,7 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.sourcePaths": [
+        "lib/features/authentication/screens"
+    ],
+    "cmake.sourceDirectory": "/Users/kelvenbragoa/Desktop/PADEL/padelmobile/linux"
 }

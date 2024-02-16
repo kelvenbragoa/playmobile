@@ -39,6 +39,7 @@ class _AppState extends State<App> {
         lastName: pref.getString('lastName') ?? '',
         mobile: pref.getString('mobile')?? '',
         birthDate: pref.getString('birthDate')?? '',
+        balance: pref.getString('balance')?? '',
         // code: pref.getString('code')?? '',
         // today: pref.getString('today')?? '',
         // month: pref.getString('month')?? '',

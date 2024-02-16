@@ -11,7 +11,9 @@ class ScheduleModel {
   var statusColor;
   var court;
   var players;
+  var playersCount;
   var priceValue;
+  var balance;
   // String code;
   // var today;
   // var yesterday;
@@ -32,7 +34,9 @@ class ScheduleModel {
     required this.price,
     required this.court,
     required this.players,
-    required this.priceValue
+    required this.priceValue,
+    required this.playersCount,
+    required this.balance
 
     // required this.code,
     // required this.today,
@@ -48,6 +52,7 @@ class ScheduleModel {
       id: json['id'],
       date: json['date'],
       players: json['players'],
+      playersCount: json['players_count'],
       startTime: json['start_time'],
       endTime: json['end_time'],
       courtId: json['court_id'],
@@ -58,6 +63,7 @@ class ScheduleModel {
       price: json['price']['name'],
       priceValue: json['price']['price'],
       court: json['court']['name'],
+      balance: json['balance'],
       // code: json['user']['code'],
       // today: json['dashboard']['today'],
       // yesterday: json['dashboard']['yesterday'],

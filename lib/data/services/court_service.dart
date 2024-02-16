@@ -32,16 +32,14 @@ Future<ApiResponse> getAllCourt() async {
 
    
    
-     
-    print(values.length);
-    print(values[0]);
+
 
     if(values.length>0){
         for(int i=0;i<values.length;i++){
           if(values[i]!=null){
             Map<String,dynamic> map=values[i];
             courtList.add(CourtModel.fromJson(map));
-            print(map);
+         
           }}
     }
     
@@ -57,7 +55,7 @@ Future<ApiResponse> getAllCourt() async {
         // we get list of posts, so we need to map each item to post model
         apiResponse.data = courtList;
         apiResponse.data as List<dynamic>;
-        print('200');
+   
         
        
 
@@ -118,8 +116,6 @@ Future<ApiResponse> getCourt(id) async {
 
 
 
-     
-    print(values);
 
     if(values.length>0){
       

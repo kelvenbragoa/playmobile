@@ -1,11 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:padelmobile/data/repositories/court_model.dart';
 import 'package:padelmobile/data/services/court_service.dart';
 import 'package:padelmobile/features/cmbhome/screens/home/schedule.dart';
 import 'package:padelmobile/utils/constants/text_strings.dart';
-import '../../../../common/custom_shapes/containers/primary_head_container.dart';
 import '../../../../data/repositories/api_response.dart';
 import '../../../../data/repositories/schedule.dart';
 import '../../../../data/services/payment_service.dart';
@@ -13,8 +14,7 @@ import '../../../../data/services/schedule_service.dart';
 import '../../../../data/services/user_services.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/colors.dart';
-import '../../../../utils/constants/sizes.dart';
-import '../fees/widgets/fees_detail_app_bar.dart';
+import '../../../../utils/constants/image_strings.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CourtsDetailScreen extends StatefulWidget {
@@ -80,6 +80,8 @@ class _CourtsDetailScreenState extends State<CourtsDetailScreen> {
         _scheduleList = response.data as List<dynamic>;
         _loadingContainer = _loadingContainer ? !_loadingContainer : _loadingContainer;
       });
+
+     
 
       if(response.error == null){
       setState(() {
@@ -176,6 +178,7 @@ void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     _selectedDay = _focusedDay;
     _selectedEventes = ValueNotifier(_getEventsForDay(_selectedDay!));
     retrieveCourt();
+    retrieveSchedule(DateTime.now());
   }
 
   @override
@@ -184,172 +187,194 @@ void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     var number = NumberFormat.currency(name: 'MZN');
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-                        'Schedule Court',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-            children: [
-              // const TPrimaryHeaderContainer(
-              //   size: 150,
-              //   child: Column(
-              //    children: [
-              //     TFeesDetailAppBar(),
-              //     SizedBox(height: TSizes.spaceBetwSections,),
-      
-                  
-              //    ],
-              //   )
-              // ),
-              //  Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: [
-              //         Text(
-              //           'Quadra',
-              //           style: Theme.of(context).textTheme.headlineSmall,
-              //           maxLines: 1,
-              //           overflow: TextOverflow.ellipsis,
-              //         )
-              //       ],
-              
-              //     ),
-              // ),
-                //  const SizedBox(
-                //   height: TSizes.spaceBetwItems,
-                // ),
-      
-               _loading ? const Padding(
-        
-        padding: EdgeInsets.all(8),
-          
-                        child: Center(child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              backgroundColor: TColors.primary,
-                            ),
-                            Text(TText.pleaseWait)
-                            
-                          ],
-                        )),
-                      ) : 
-                   Column(
-                    
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                court.name,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            ],
-                      
-                          ),
-                      ),
-                      TableCalendar<ScheduleModel>(
-                          firstDay: DateTime.now(),
-                          lastDay: DateTime.utc(2030, 3, 14),
-                          focusedDay: DateTime.now(),
-                          calendarFormat: _calendarFormat,
-                          onDaySelected: (selectedDay, focusedDay) {
-                          if (!isSameDay(_selectedDay, selectedDay)) {
-                            // Call `setState()` when updating the selected day
-                            setState(() {
-                              _selectedDay = selectedDay;
-                              _focusedDay = focusedDay;
-                            });
-                          }
-                          retrieveSchedule(selectedDay);
-                        },
-                          // eventLoader: _getEventsForDay,
-                          selectedDayPredicate: (day) {
-                          // Use `selectedDayPredicate` to determine which day is currently selected.
-                          // If this returns true, then `day` will be marked as selected.
-                          // Using `isSameDay` is recommended to disregard
-                          // the time-part of compared DateTime objects.
-                          return isSameDay(_selectedDay, day);
-                        },
-                        onFormatChanged: (format) {
-                            if (_calendarFormat != format) {
-                              // Call `setState()` when updating calendar format
-                              setState(() {
-                                _calendarFormat = format;
-                              });
-                            }
-                          },
-                          onPageChanged: (focusedDay) {
-                            // No need to call `setState()` here
-                            _focusedDay = focusedDay;
-                          },
-                        ),
-                      
-                       
-                         _loadingContainer ? const Padding(
-        
-                        padding: EdgeInsets.all(8),
-          
-                        child: Center(child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(
-                              backgroundColor: TColors.primary,
-                            ),
-                            Text(TText.pleaseWait)
-                            
-                          ],
-                        )),
-                      ) : ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _scheduleList.length,
-                            itemBuilder: (BuildContext context, int index){
-                              ScheduleModel scheduleModel = _scheduleList[index];
-      
-                            return ListTile(
-                                    onTap: (){
-                                      Get.to(ScheduleScreen(id: scheduleModel.id));
-                                    },
-                                    title: Text('${scheduleModel.startTime} ás ${scheduleModel.endTime}'),
-                                    trailing: Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color:  scheduleModel.statusId == 1 ? Colors.green : (scheduleModel.statusId == 2 ? Colors.yellow : Colors.red)
-                                      ),
-                                      child: Text('${scheduleModel.status}')),
-                                
-                                  
-                              
-                           
-                              );
-                            }),
-                        
-      
-                        
-                    ]
-                  )
-           
-              
-        
-            ],
+      // appBar: AppBar(
+      //   title: Text(
+      //                   'Schedule Court',
+      //                   style: Theme.of(context).textTheme.bodyLarge,
+      //                   maxLines: 1,
+      //                   overflow: TextOverflow.ellipsis,
+      //                 ),
+      // ),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+         
+             actions: [
+          IconButton(
+            icon: const Icon(Iconsax.message),
+            onPressed: () {},
           ),
-      ),
+          IconButton(
+            icon: const Icon(Iconsax.notification),
+            onPressed: () {},
+          ),
+        ],
+          
+          expandedHeight: 200,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Text('Schedule Court',style: Theme.of(context).textTheme.bodyLarge,maxLines: 1,overflow: TextOverflow.ellipsis,),
+            background: const Image(image: AssetImage(TImages.letsPlay),fit: BoxFit.cover),
+
+          ),
+          floating: true,
+          
+          pinned: true,
+
+        ),],
+        body: _loading ? const Center(
+          child: Padding(
+              
+              padding: EdgeInsets.all(8),
+            
+                        child: Center(child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CupertinoActivityIndicator(
+                              // backgroundColor: TColors.primary,
+                              color: TColors.primary,
+        
+                            ),
+                            Text(TText.pleaseWait)
+                            
+                          ],
+                        )))
+                      
+        ) : 
+                     SingleChildScrollView(
+                       child: Column(
+                        
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    court.name,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                          
+                              ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Limite: ${court.limit} Jogadores',
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                          
+                              ),
+                          ),
+                          TableCalendar<ScheduleModel>(
+                              firstDay: DateTime.now(),
+                              lastDay: DateTime.utc(2030, 3, 14),
+                              focusedDay: DateTime.now(),
+                              calendarFormat: _calendarFormat,
+                              onDaySelected: (selectedDay, focusedDay) {
+                              if (!isSameDay(_selectedDay, selectedDay)) {
+                                // Call `setState()` when updating the selected day
+                                setState(() {
+                                  _selectedDay = selectedDay;
+                                  _focusedDay = focusedDay;
+                                });
+                              }
+                              retrieveSchedule(selectedDay);
+                            },
+                              
+                              selectedDayPredicate: (day) {
+                              
+                              return isSameDay(_selectedDay, day);
+                            },
+                            onFormatChanged: (format) {
+                                if (_calendarFormat != format) {
+                                  
+                                  setState(() {
+                                    _calendarFormat = format;
+                                  });
+                                }
+                              },
+                              onPageChanged: (focusedDay) {
+                                
+                                _focusedDay = focusedDay;
+                              },
+                            ),
+                          
+                           
+                             _loadingContainer ? const Padding(
+                               
+                            padding: EdgeInsets.all(8),
+                                 
+                            child: Center(child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  backgroundColor: TColors.primary,
+                                ),
+                                Text(TText.pleaseWait)
+                                
+                              ],
+                            )),
+                          ) : ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                
+                                shrinkWrap: true,
+                                itemCount: _scheduleList.length,
+                                itemBuilder: (BuildContext context, int index){
+                                  ScheduleModel scheduleModel = _scheduleList[index];
+                                 
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListTile(
+                                    shape: RoundedRectangleBorder( //<-- SEE HERE
+                                    side: BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                          onTap: (){
+                                            scheduleModel.statusId !=3 ? Get.to(ScheduleScreen(id: scheduleModel.id)) : ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                            content: Text('Player limit reached')
+                                            ));;
+                                          },
+                                          title: Text('${scheduleModel.startTime} ás ${scheduleModel.endTime}'),
+                                          trailing: Container(
+                                            padding: EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              color:  scheduleModel.statusId == 1 ? Colors.green : (scheduleModel.statusId == 2 ? Colors.yellow : Colors.red)
+                                            ),
+                                            child: Text('${scheduleModel.status}(${scheduleModel.playersCount})')),
+                                      
+                                        
+                                    
+                                                             
+                                    ),
+                                );
+                                }),
+                            
+                                   
+                            
+                        ]
+                                         ),
+                     )
+             
+                
+          
+              
+            ),
+        );
       
-    );
+      
+    
   }
 }
 

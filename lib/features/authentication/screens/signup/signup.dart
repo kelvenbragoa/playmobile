@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -12,7 +13,7 @@ import '../../../../utils/constants/colors.dart';
 import '../../../../utils/constants/sizes.dart';
 import '../../../../utils/constants/text_strings.dart';
 import '../../../../utils/helpers/helper.dart';
-import '../../../cmbhome/screens/home/home.dart';
+import '../../../cmbhome/screens/home/home2.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
@@ -83,7 +84,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       UserService.userProfile = user;
     });
 
-    print(UserService.userProfile.email);
 
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setInt('id', user.id);
@@ -208,16 +208,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                               
                               if(pickedDate != null ){
-                                  print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
+                                  // print(pickedDate);  //pickedDate output format => 2021-03-10 00:00:00.000
                                   String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate); 
-                                  print(formattedDate); //formatted date output using intl package =>  2021-03-16
+                                  // print(formattedDate); //formatted date output using intl package =>  2021-03-16
                                     //you can implement different kind of Date Format here according to your requirement
 
                                   setState(() {
                                     _dateController.text = formattedDate; //set output date to TextField value. 
                                   });
                               }else{
-                                  print("Date is not selected");
+                                  // print("Date is not selected");
                               }
                             },
                         ),
@@ -370,7 +370,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 width: double.infinity,
                                 child: Column(
                                   children: [
-                                    CircularProgressIndicator(),
+                                    CupertinoActivityIndicator(
+                                    color: TColors.primary,
+                                    ),
                                     Text(TText.pleaseWait)
                                   ],
                                 ))

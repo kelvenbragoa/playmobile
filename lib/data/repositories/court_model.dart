@@ -4,6 +4,7 @@ class CourtModel{
   String name;
   String description;
   String imageUrl;
+  String clubName;
 
 
 
@@ -16,6 +17,7 @@ class CourtModel{
     required this.name,
     required this.description,
     required this.imageUrl,
+    required this.clubName
 
    
   });
@@ -28,6 +30,7 @@ class CourtModel{
       limit: json['limit'],
       description: json['description'],
       imageUrl: json['image_url'],
+      clubName: json['club']['name']
       
 
       

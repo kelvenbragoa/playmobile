@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:padelmobile/features/authentication/screens/welcome/welcome.dart';
 
-import '../../screens/login/login.dart';
+import '../../screens/login2/login.dart';
 
 class OnBoardingController extends GetxController{
   static OnBoardingController get instance => Get.find();
@@ -22,7 +23,7 @@ class OnBoardingController extends GetxController{
     if(currentPageIndex.value == 2){
       //Get.to(LoginScreen());
       
-      Get.offAll(const LoginScreen());
+      Get.offAll(const WelcomeScreen());
     }else{
       int page = currentPageIndex.value +1;
       pageController.jumpToPage(page);

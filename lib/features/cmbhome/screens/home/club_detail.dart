@@ -4,38 +4,48 @@ import 'package:iconsax/iconsax.dart';
 import 'package:padelmobile/utils/constants/colors.dart';
 import 'package:padelmobile/utils/constants/sizes.dart';
 import 'package:get/get.dart';
-import 'package:padelmobile/utils/constants/text_strings.dart';
 import '../../../../data/repositories/api_response.dart';
 import '../../../../data/repositories/club_model.dart';
+import '../../../../data/repositories/court_model.dart';
 import '../../../../data/services/club_service.dart';
+import '../../../../data/services/court_service.dart';
 import '../../../../utils/constants/api_constants.dart';
 import '../../../../utils/constants/image_strings.dart';
-import 'club_detail.dart';
+import '../../../../utils/constants/text_strings.dart';
+import 'court_detail.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class ClubDetails extends StatefulWidget {
+  int id;
+  String name, description, province,address ;
+  var minPrice;
+  ClubDetails({super.key, required this.id,required this.name,required this.description,required this.province,required this.address, required this.minPrice});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<ClubDetails> createState() => _ClubDetailsState();
+
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<dynamic> _clubList = [];
-  List<dynamic> _clubListSearch = [];
+
+class _ClubDetailsState extends State<ClubDetails> {
+
+  List<dynamic> _courtList = [];
+  List<dynamic> _courtListSearch = [];
   TextEditingController controller = TextEditingController(text: '');
   bool _loading = true;
-    Future<void> retrieveAllClubs()async{
-    ApiResponse response = await getAllClub();
+    Future<void> retrieveCourtsFromClub()async{
+      
+    ApiResponse response = await getClub(widget.id);
+ 
       setState(() {
-        _clubList = response.data as List<dynamic>;
-        _clubListSearch= response.data as List<dynamic>;
+        _courtList = response.data as List<dynamic>;
+        _courtListSearch= response.data as List<dynamic>;
         _loading = _loading ? !_loading : _loading;
       });
-     
+
     if(response.error == null){
       setState(() {
-        _clubList = response.data as List<dynamic>;
-        _clubListSearch= response.data as List<dynamic>;
+        _courtList = response.data as List<dynamic>;
+        _courtListSearch= response.data as List<dynamic>;
         _loading = _loading ? !_loading : _loading;
       });
     }
@@ -65,14 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    retrieveAllClubs();
+    retrieveCourtsFromClub();
   }
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lets Play Padel',style: Theme.of(context).textTheme.bodyLarge),
+        title: Text(widget.name,style: Theme.of(context).textTheme.bodyLarge),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.message),
@@ -103,99 +113,63 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         )))
                       
-        ) : SingleChildScrollView(
-          child: Column(
-            children: [
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text('APROVEITE AO MÁXIMO',style: Theme.of(context).textTheme.bodyLarge,)
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text('Receba notificações de campos disponíveis, dê mais visibilidade aos seus jogos e consulte as suas métricas e desempenho',style: Theme.of(context).textTheme.labelMedium,)
-                      ),
-                      const Icon(Icons.arrow_forward_ios,size: TSizes.fontSizeMd,)
-                  ],
-                ),
-              ),
-              Divider(),
-              const SizedBox(height: TSizes.spaceBetwSections,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text('Lembre-se...',style: Theme.of(context).textTheme.bodyLarge,)
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child:  Card(
-                    color: TColors.ligth,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(TSizes.fontSizeMd),
-                          ),
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Iconsax.activity),
-                                    Container(width: 20),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Container(height: 5),
-                                          const Text(
-                                            "Edite as suas preferências de jogabilidade",overflow: TextOverflow.ellipsis,maxLines: 1,
-                                          ),
-                                          Container(height: 5),
-                                          const Text(
-                                            "Melhor mão, lado de campo, tipo de jogos preferido",overflow: TextOverflow.ellipsis,maxLines: 1,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Icon(Icons.arrow_forward,size: TSizes.fontSizeMd,)
-                                  ],
+        ): SingleChildScrollView(
+                      child: Column(
+                              children: [
+                                Divider(),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text('${widget.province}, ${widget.address}',style: Theme.of(context).textTheme.bodyLarge,)
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-              ),
-               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Text('Encontre o jogo perfeito',style: Theme.of(context).textTheme.bodyLarge,)
-                  ],
-                ),
-              ),
-        
-              SizedBox(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                      child: Text('Preço a partir de ${widget.minPrice} MT por reserva',style: Theme.of(context).textTheme.labelMedium,)
+                      ),
+                      // const Icon(Icons.arrow_forward_ios,size: TSizes.fontSizeMd,)
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Flexible(
+                      child: Text(widget.description,style: Theme.of(context).textTheme.labelMedium,)
+                      ),
+                      // const Icon(Icons.arrow_forward_ios,size: TSizes.fontSizeMd,)
+                                    ],
+                                  ),
+                                ),
+                                Divider(),
+                                const SizedBox(height: TSizes.spaceBetwSections,),
+                                
+                               
+                                 Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text('Quadras',style: Theme.of(context).textTheme.bodyLarge,)
+                                    ],
+                                  ),
+                                ),
+                    
+                                SizedBox(
                             height: 220,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: _clubList.length,
+                              itemCount: _courtList.length,
                               itemBuilder: (BuildContext context, int index){
-                                ClubModel club = _clubList[index];
+                                CourtModel court = _courtList[index];
                                 return InkWell(
                                   onTap: (){
-                                    Get.to(ClubDetails(id: club.id, name: club.name,address:club.address, province:club.province, description:club.description, minPrice: club.minPrice,));
+                                    Get.to(CourtsDetailScreen(id: court.id));
                                   },
                                   child: Card(
                                     // color: Color.fromARGB(255, 249, 249, 249),
@@ -209,37 +183,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                               const ClipRRect(
+                                             ClipRRect(
                                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(TSizes.fontSizeMd), topRight: Radius.circular(TSizes.fontSizeMd)),
                                                  child: Image(
-                                                  image: AssetImage(TImages.padel ),width: 250, height: 150, fit: BoxFit.fill,),
+                                                  image: AssetImage(TImages.letsPlay ),width: 250, height: 150, fit: BoxFit.fill,),
                                                ),
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal:8.0),
-                                                child: Column(
+                                               Padding(
+                                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                  Text(
-                                                  club.name,
+                                                    Text(
+                                                  court.name,
                                                   style: Theme.of(context).textTheme.bodyMedium,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  club.address,
+                                                                                             ),
+                                                                                             Text(
+                                                  'Limite: ${court.limit}',
                                                   style: Theme.of(context).textTheme.bodyMedium,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Text(
-                                                  club.province,
+                                                                                             ),
+                                                                                             Text(
+                                                  court.description,
                                                   style: Theme.of(context).textTheme.bodyMedium,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
-                                                ),
-                                                ],),
-                                              )
+                                                                                             ),
+                                                  ],
+                                                 ),
+                                               )
+                                              
                                              
                                             ],
                                           ),
@@ -250,6 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }
                             )),
+                            const SizedBox(height: TSizes.spaceBetwSections,),
                             Divider(),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -266,13 +243,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                             ),
                             Divider(),
-             
-        
-              
-            ],
-          ),
-        )
-      );
-    
+                               
+                    
+                                
+                              ],
+                            ),
+                    ),
+      
+    );
   }
 }
